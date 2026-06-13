@@ -19,25 +19,37 @@ Abrir en `http://localhost:4200`
 
 Componente standalone con un `FormControl` conectado a un pipeline RxJS:
 
-- `filter` — no busca si el texto tiene menos de 3 caracteres
-- `debounceTime(400)` — espera a que el usuario deje de escribir
-- `distinctUntilChanged` — no repite la misma búsqueda
-- `switchMap` — cancela la petición anterior si el usuario escribe de nuevo
+```typescript
+this.searchControl.valueChanges.pipe(
+  filter((text: string) => text.length >= 3),
+  debounceTime(400),
+  distinctUntilChanged(),
+  tap(() => this.isLoading.set(true)),
+  switchMap((text: string) => this.mockService.search(text))
+)
+```
 
-Los resultados se guardan en un `signal()` y se muestran con `@for` en el template.
+Usé `switchMap` en lugar de `mergeMap` o `concatMap` porque cancela la petición anterior si el usuario sigue escribiendo. Así evito que lleguen resultados desordenados si la red es lenta (race condition). `distinctUntilChanged` complementa esto: si el usuario borra y vuelve a escribir lo mismo, no dispara otra petición.
 
-El servicio `MockApiService` simula una API con datos hardcodeados y un `delay(400ms)`.
+El estado del componente (`results`, `isLoading`) lo manejo con `signal()` en lugar de variables normales para aprovechar la reactividad de Angular 17+ sin necesitar `async pipe` ni importar `CommonModule`.
 
 ---
 
 ## Ejercicio 2 — Carrito con Signals
 
-`CartService` con estado global usando Angular Signals:
+```typescript
+private _cartItems = signal<Product[]>([]);
+cartItems = this._cartItems.asReadonly();
 
-- `signal<Product[]>([])` privado, expuesto como `readonly` hacia afuera
-- `computed()` para `totalCount` y `totalPrice` — se recalculan solos cuando cambia la lista
-- `effect()` en el constructor que loguea el carrito cada vez que cambia
-- `addItem()` actualiza el estado de forma inmutable con `update(items => [...items, product])`
+totalCount = computed(() => this._cartItems().length);
+totalPrice = computed(() =>
+  this._cartItems().reduce((acc, item) => acc + item.price, 0)
+);
+```
+
+El signal base es privado y se expone solo como `readonly` para que ningún componente pueda mutar la lista directamente — eso lo controla solo el servicio a través de `addItem()`. Los `computed` no necesitan lógica extra: Angular detecta que dependen de `_cartItems` y los recalcula automáticamente cuando este cambia.
+
+El `effect()` en el constructor loguea el estado del carrito en cada cambio. Angular detecta las dependencias solo leyendo los signals dentro del effect, sin necesidad de suscripciones manuales.
 
 ---
 
