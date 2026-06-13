@@ -5,31 +5,26 @@ import { Product } from '../models/product.interface';
   providedIn: 'root',
 })
 export class CartService {
-  // ─── Signal base PRIVADO (writable solo internamente) ────────────────────────
-  private readonly _cartItems = signal<Product[]>([]);
 
-  // ─── Signal de solo lectura hacia afuera ─────────────────────────────────────
-  readonly cartItems = this._cartItems.asReadonly();
+  // lo hago privado para que nadie lo mute directo desde afuera
+  private _cartItems = signal<Product[]>([]);
 
-  // ─── Computed signals (se recalculan solos cuando _cartItems cambie) ──────────
-  readonly totalCount = computed(() => this._cartItems().length);
+  cartItems = this._cartItems.asReadonly();
 
-  readonly totalPrice = computed(() =>
-    this._cartItems().reduce((sum, item) => sum + item.price, 0)
+  totalCount = computed(() => this._cartItems().length);
+
+  totalPrice = computed(() =>
+    this._cartItems().reduce((acc, item) => acc + item.price, 0)
   );
 
   constructor() {
-    // ─── Este effect se ejecuta automáticamente cada vez que cartItems cambia ────────
     effect(() => {
-      console.log('🛒 Carrito actualizado:', this._cartItems());
-      console.log(`   Items: ${this.totalCount()} | Total: $${this.totalPrice().toFixed(2)}`);
+      console.log('carrito actualizado:', this._cartItems());
+      console.log('total items:', this.totalCount(), '| precio total:', this.totalPrice());
     });
   }
 
-  // ─── Creo el método para agregar un producto (inmutable: crea un nuevo arreglo) ───────
   addItem(product: Product): void {
     this._cartItems.update(items => [...items, product]);
   }
 }
-
-
