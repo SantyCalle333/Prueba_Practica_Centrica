@@ -1,0 +1,166 @@
+/* ─── Variables locales (heredan del tema oscuro global) ─────────────────────── */
+:host {
+  display: block;
+}
+
+.search-wrapper {
+  background: rgba(18, 18, 42, 0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(119, 2, 255, 0.2);
+  border-radius: 20px;
+  padding: 2rem;
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,0.04) inset,
+    0 20px 60px rgba(0, 0, 0, 0.4),
+    0 0 40px rgba(119, 2, 255, 0.08);
+  transition: box-shadow 0.3s ease;
+}
+
+.search-wrapper:hover {
+  box-shadow:
+    0 0 0 1px rgba(255,255,255,0.06) inset,
+    0 20px 60px rgba(0, 0, 0, 0.5),
+    0 0 60px rgba(119, 2, 255, 0.15);
+}
+
+.search-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #f0f0ff;
+  margin: 0 0 0.3rem 0;
+  letter-spacing: -0.02em;
+}
+
+.search-subtitle {
+  font-size: 0.8rem;
+  color: rgba(240, 240, 255, 0.4);
+  margin: 0 0 1.5rem 0;
+}
+
+/* ─── Input ──────────────────────────────────────────────────────────────────── */
+.input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.search-icon {
+  position: absolute;
+  left: 1rem;
+  font-size: 1rem;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0.6;
+}
+
+.search-input {
+  width: 100%;
+  padding: 0.85rem 1rem 0.85rem 2.9rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(119, 2, 255, 0.25);
+  border-radius: 12px;
+  font-size: 0.95rem;
+  color: #f0f0ff;
+  outline: none;
+  transition: border-color 0.25s ease, background 0.25s ease, box-shadow 0.25s ease;
+  font-family: inherit;
+}
+
+.search-input::placeholder {
+  color: rgba(240, 240, 255, 0.28);
+}
+
+.search-input:focus {
+  border-color: rgba(119, 2, 255, 0.7);
+  background: rgba(119, 2, 255, 0.08);
+  box-shadow: 0 0 0 3px rgba(119, 2, 255, 0.15), 0 0 20px rgba(119, 2, 255, 0.1);
+}
+
+/* ─── Loading ────────────────────────────────────────────────────────────────── */
+.loading-indicator {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 1.25rem;
+  font-size: 0.8rem;
+  color: rgba(168, 85, 247, 0.8);
+  font-style: italic;
+}
+
+.loading-indicator::before {
+  content: '';
+  width: 14px;
+  height: 14px;
+  border: 2px solid rgba(168, 85, 247, 0.2);
+  border-top-color: #a855f7;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+  flex-shrink: 0;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* ─── Results ────────────────────────────────────────────────────────────────── */
+.results-list {
+  list-style: none;
+  padding: 0;
+  margin: 1.25rem 0 0 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.result-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  padding: 0.9rem 1.1rem;
+  border-radius: 12px;
+  background: rgba(119, 2, 255, 0.07);
+  border: 1px solid rgba(119, 2, 255, 0.18);
+  border-left: 3px solid rgba(119, 2, 255, 0.7);
+  cursor: default;
+  transition: background 0.2s ease, transform 0.2s ease, border-color 0.2s ease;
+  animation: slideIn 0.22s ease both;
+}
+
+.result-item:hover {
+  background: rgba(119, 2, 255, 0.13);
+  border-color: rgba(119, 2, 255, 0.4);
+  transform: translateX(4px);
+}
+
+.customer-name {
+  font-weight: 600;
+  color: #f0f0ff;
+  font-size: 0.9rem;
+}
+
+.customer-email {
+  font-size: 0.78rem;
+  color: rgba(240, 240, 255, 0.5);
+}
+
+.customer-phone {
+  font-size: 0.75rem;
+  color: rgba(240, 240, 255, 0.35);
+}
+
+.no-results {
+  margin-top: 1.25rem;
+  text-align: center;
+  color: rgba(240, 240, 255, 0.3);
+  font-style: italic;
+  font-size: 0.85rem;
+  padding: 1.5rem;
+  border: 1px dashed rgba(119, 2, 255, 0.2);
+  border-radius: 12px;
+}
+
+@keyframes slideIn {
+  from { opacity: 0; transform: translateY(-6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}

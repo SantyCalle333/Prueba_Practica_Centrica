@@ -1,0 +1,39 @@
+<div class="search-wrapper">
+  <h2 class="search-title">🔍 Búsqueda de Clientes</h2>
+  <p class="search-subtitle">Escribe al menos 3 caracteres para buscar</p>
+
+  <div class="input-wrapper">
+    <span class="search-icon">🔎</span>
+    <input
+      id="customer-search-input"
+      type="text"
+      [formControl]="searchControl"
+      placeholder="Ej: Alice, Carlos..."
+      class="search-input"
+      autocomplete="off"
+    />
+  </div>
+
+  <!-- Spinner de carga -->
+  @if (isLoading()) {
+    <p class="loading-indicator">⏳ Buscando...</p>
+  }
+
+  <!-- Lista de resultados -->
+  @if (!isLoading() && results().length > 0) {
+    <ul class="results-list">
+      @for (customer of results(); track customer.id) {
+        <li class="result-item">
+          <span class="customer-name">{{ customer.name }}</span>
+          <span class="customer-email">{{ customer.email }}</span>
+          <span class="customer-phone">{{ customer.phone }}</span>
+        </li>
+      }
+    </ul>
+  }
+
+  <!-- Sin resultados -->
+  @if (!isLoading() && hasSearched() && results().length === 0) {
+    <p class="no-results">No se encontraron clientes con ese término.</p>
+  }
+</div>

@@ -1,0 +1,47 @@
+<div class="cart-wrapper">
+  <h2 class="cart-title">🛒 Carrito de Compras</h2>
+  <p class="cart-subtitle">Powered by Angular Signals</p>
+
+  <!-- ── Totales (computed signals) ── -->
+  <div class="cart-totals">
+    <div class="total-badge">
+      <span class="badge-label">Items</span>
+      <span class="badge-value">{{ cartService.totalCount() }}</span>
+    </div>
+    <div class="total-badge accent">
+      <span class="badge-label">Total</span>
+      <span class="badge-value">${{ cartService.totalPrice().toFixed(2) }}</span>
+    </div>
+  </div>
+
+  <!-- ── Productos disponibles para agregar ── -->
+  <div class="products-section">
+    <h3 class="section-title">Productos disponibles</h3>
+    <ul class="products-list">
+      @for (product of availableProducts; track product.id) {
+        <li class="product-item">
+          <span class="product-name">{{ product.name }}</span>
+          <span class="product-price">${{ product.price.toFixed(2) }}</span>
+          <button class="add-btn" (click)="addToCart(product)">+ Agregar</button>
+        </li>
+      }
+    </ul>
+  </div>
+
+  <!-- ── Items en el carrito (signal de lectura) ── -->
+  @if (cartService.totalCount() > 0) {
+    <div class="cart-items-section">
+      <h3 class="section-title">En tu carrito</h3>
+      <ul class="cart-items-list">
+        @for (item of cartService.cartItems(); track $index) {
+          <li class="cart-item">
+            <span>{{ item.name }}</span>
+            <span class="item-price">${{ item.price.toFixed(2) }}</span>
+          </li>
+        }
+      </ul>
+    </div>
+  } @else {
+    <p class="empty-cart">Tu carrito está vacío. ¡Agrega un producto!</p>
+  }
+</div>
